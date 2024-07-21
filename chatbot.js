@@ -27,6 +27,7 @@ const userSchema = new mongoose.Schema({
   username: String,
   email: String,
   password: String,
+  id: Number,
 });
 
 const User = mongoose.model("User", userSchema);
@@ -89,14 +90,22 @@ app.post("/register", async (req, res) => {
   try {
     console.log("Received data:", req.body);
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    const users = await User.find({});
+    let largestUserID = users[0].id;
+    for (let i = 1; i < users.length; i++) {
+      if (users[i].id > largestUserID) {
+        largestUserID = users[i].id;
+      }
+    }
     const newUser = new User({
       username: req.body.username,
       email: req.body.email,
       password: hashedPassword,
+      id: largestUserID + 1,
     });
     await newUser.save();
     console.log("User saved:", newUser);
-    res.redirect('/')
+    res.redirect("/");
   } catch (err) {
     console.error("Error registering user:", err);
   }
@@ -104,15 +113,14 @@ app.post("/register", async (req, res) => {
 
 app.post("/login", async (req, res) => {
   try {
-    const user = await User.findOne({email: req.body.email});
-    if (user && await bcrypt.compare(req.body.password, user.password)) {
-      res.redirect('/')
+    const user = await User.findOne({ email: req.body.email });
+    if (user && (await bcrypt.compare(req.body.password, user.password))) {
+      res.redirect("/");
     }
-} catch (err) {
-    console.log(err)
-}
+  } catch (err) {
+    console.log(err);
+  }
 });
-
 
 app.listen(port, async () => {
   await init();
