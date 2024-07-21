@@ -1,0 +1,403 @@
+body {
+  overflow-x: hidden;
+  background-color: #212121;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+.response,
+.request {
+  font-family: Arial, sans-serif;
+  width: 90%;
+  max-width: 400px;
+  background-color: #2f2f2f;
+  padding: 8px 32px;
+  color: white;
+  border-radius: 32px;
+  line-height: 28px;
+  transition: opacity 0.2s ease-in 0.2s;
+}
+
+.response {
+  position: relative;
+  right: 100%;
+}
+
+.request {
+  background-color: #343434;
+  text-align: left;
+  position: relative;
+  left: 100%;
+}
+
+.main {
+  display: flex;
+  top: 20px;
+}
+
+main {
+  position: relative;
+  top: 70px;
+  left: 30%;
+}
+
+.response_request {
+  margin-top: 30px;
+  padding-bottom: 150px;
+}
+
+
+#userInput {
+  position: fixed;
+  bottom: 20px;
+  color: white;
+  font-family: Arial, sans-serif;
+  width: 58%;
+  padding: 20px 0;
+  padding-left: 24px;
+  padding-right: 70px !important;
+  border: none;
+  background-color: #343434;
+  border-radius: 32px;
+  z-index: 999;
+  font-size: 16px;
+  display: flex;
+  justify-content: center;
+}
+
+input:focus {
+  outline: none;
+}
+
+button#inputBtn {
+  position: fixed;
+  bottom: 30px;
+  color: #2f2f2f;
+  font-family: Arial, sans-serif;
+  padding: 9.5px 12px;
+  border: none;
+  background-color: white;
+  border-radius: 50%;
+  z-index: 999;
+  font-size: 20px;
+  right: 13%;
+}
+
+ul {
+  padding: 0 !important;
+  margin-left: 13px;
+  margin-top: 30px;
+}
+
+h1.h1 {
+  color: white;
+  padding: 0;
+  font-size: 20px;
+  display: flex;
+  justify-content: space-between;
+  font-family: Arial, sans-serif;
+}
+
+aside > h1 > a#createChatBtn {
+  background-color: transparent;
+  color: white;
+  margin-top: 0px;
+  margin-right: 20px;
+  border: none;
+  border-radius: 10px;
+  text-decoration: none;
+  font-family: Arial, sans-serif;
+  font-size: 20px;
+
+}
+
+aside > h1 > a#createChatBtn:hover {
+color: #bdbdbd;
+}
+
+aside > button > i {
+  padding-inline: 4px;
+}
+
+aside {
+  background-color: #171717;
+  color: white;
+  width: 20%;
+  height: 100%;
+  margin: 0;
+  position: fixed;
+  left: 0;
+  top: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: 10px;
+  scrollbar-color: #686868 #424242;
+}
+
+aside::-webkit-scrollbar {
+  width: 15px;
+}
+
+aside::-webkit-scrollbar-track {
+  background: #424242;
+}
+
+aside::-webkit-scrollbar-thumb {
+  background: #686868;
+}
+
+aside::-webkit-scrollbar-thumb:hover {
+  background: #808080;
+}
+
+.grey {
+  max-width: 100%;
+  z-index: 9999;
+  height: 20px;
+  background-color: #212121;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  position: fixed;
+  bottom: 0;
+  color: white;
+}
+
+.grey > p {
+  left: 100%;
+  position: relative;
+  margin-top: 3px;
+}
+
+.profileDiv {
+  width: 80%;
+  max-width: 1050px;
+  position: fixed;
+  top: 0;
+  background-color: #212121;
+  z-index: 9999999;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  align-items: center;
+}
+
+.profileDiv > div {
+  display: flex;
+  align-items: center;
+}
+
+.profileDiv > h1 {
+  margin: 0;
+  color: white;
+}
+
+.profileDiv > div > a > img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.profileDiv > div > button > i {
+  font-size: 30px;
+  color: rgb(169, 169, 169);
+}
+
+.profileDiv > div > button {
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+  margin-right: 10px;
+}
+
+.chat {
+  color: white;
+  font-family: Arial, sans-serif;
+  margin-left: 0;
+  padding: 0.63rem 1.25rem;
+  font-size: 15px;
+  margin-right: 20px;
+  border-radius: 10px;
+}
+
+.chat:hover {
+  background-color: #343434;
+}
+
+.headerChat {
+  font-weight: 600;
+  color: white;
+}
+
+body.lightmode {
+  background-color: #f5f5f5;
+}
+
+.response.lightmode,
+.request.lightmode {
+  background-color: #e0e0e0;
+  color: #212121;
+}
+
+.request.lightmode {
+  background-color: #ffffff;
+}
+
+h1.h1.lightmode {
+  color: #212121;
+}
+
+#userInput.lightmode {
+  background-color: #ffffff;
+  border: 1px solid #bdbdbd;
+  color: #212121;
+}
+
+button#inputBtn.lightmode {
+  background-color: #e0e0e0;
+  color: #212121;
+}
+
+button#inputBtn.lightmode:hover {
+  background-color: #bdbdbd;
+}
+
+aside.lightmode {
+  background-color: #e0e0e0;
+  color: #212121;
+}
+
+aside > a#createChatBtn.lightmode {
+  color: #212121;
+}
+
+aside > a#createChatBtn.lightmode:hover {
+  background-color: #bdbdbd;
+}
+
+.profileDiv.lightmode {
+  background-color: #f5f5f5;
+}
+
+.profileDiv > div > a > img.lightmode {
+  border: 1px solid #bdbdbd;
+}
+
+.profileDiv > div > button > i.lightmode {
+  color: #757575;
+}
+
+.chat.lightmode {
+  color: #212121;
+}
+
+.chat.lightmode:hover {
+  background-color: #bdbdbd;
+}
+
+.grey.lightmode {
+  background-color: #f5f5f5;
+  color: #757575;
+}
+
+#welcome {
+  text-align: center;
+  font-family: Arial, sans-serif;
+  color: #b7b7b7;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  left: 26%;
+  top: 200px;
+}
+
+.respAside{
+  color: #b7b7b7;
+  font-size: 20px;
+  margin-left: 20px;
+  margin-top: 20px;
+  display: none;
+}
+
+#welcome.lightmode {
+  color: #424242;
+}
+
+#welcome > p {
+  margin-top: -20px;
+}
+
+#welcome > h1 {
+  font-size: 48px;
+}
+
+::-webkit-scrollbar {
+  width: 15px;
+}
+
+/* Track */
+body::-webkit-scrollbar-track {
+  background: #424242;
+}
+
+/* Handle */
+body::-webkit-scrollbar-thumb {
+  background: #686868;
+}
+
+/* Handle on hover */
+body::-webkit-scrollbar-thumb:hover {
+  background: #808080;
+}
+
+body.lightmode::-webkit-scrollbar-track {
+  background: #f1f1f1; /* color of the tracking area */
+}
+
+body.lightmode::-webkit-scrollbar-thumb {
+  background: #888; /* color of the scroll thumb */
+}
+
+body.lightmode::-webkit-scrollbar-thumb:hover {
+  background: #555; /* color of the scroll thumb on hover */
+}
+
+
+@media (max-width: 900px) {
+  #welcome {
+    left: 0;
+  }
+  aside {
+    display: none;
+  }
+  #userInput {
+    width: 80%;
+    left: 10%;
+  }
+  button#inputBtn {
+    right: 12%;
+  }
+  .profileDiv {
+    right: 0;
+  }
+  main {
+    left: 0;
+  }
+  .respAside {
+    display: inline;
+  }
+}
+
+@media (max-width: 500px) {
+}

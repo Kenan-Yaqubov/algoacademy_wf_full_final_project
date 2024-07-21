@@ -1,0 +1,78 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Account</title>
+    <link rel="stylesheet" href="/public/css/register.css" />
+  </head>
+  <body>
+    <video autoplay loop muted playsinline>
+      <source src="/public/css/video.mp4" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+    <div class="div1">
+      <h1>Create AI Account</h1>
+      <form id="registerForm" action="/register" method="post">
+
+        <input
+          type="text"
+          name="username"
+          id="name"
+          placeholder="Your Name"
+          class="input"
+          required
+          aria-required="true"
+        />
+        <p class="issue" id="nameLengthError">Name must be between 5 and 25
+          characters.</p>
+
+        <input
+          type="text"
+          name="email"
+          id="email"
+          placeholder="E-mail"
+          class="input"
+          required
+          aria-required="true"
+          autocomplete="email"
+        />
+        <p class="issue" id="emailError">Please enter a valid email.</p>
+
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Enter Password"
+          class="input"
+          required
+          aria-required="true"
+          autocomplete="new-password"
+        />
+        <p class="issue" id="passwordLengthError">Password must be between 7 and
+          20 characters.</p>
+
+        <input
+          type="password"
+          name="password2"
+          id="re-password"
+          placeholder="Re-enter Password"
+          class="input"
+          required
+          aria-required="true"
+          autocomplete="new-password"
+        />
+        <p class="issue" id="passwordMatchError">Passwords do not match!</p>
+
+        <div class="div2">
+          <input type="checkbox" name="checkbox" class="checkbox1" required />
+          <label for="checkbox" class="checkbox">By pressing, you agree to
+            <a href="#">Sites Conditions of Use</a>
+            and
+            <a href="#">Privacy Notice</a>.</label>
+        </div>
+        <button type="submit" id="button">Create</button>
+      </form>
+    </div>
+    <script src="/public/register.js"></script>
+  </body>
+</html>

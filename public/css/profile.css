@@ -1,0 +1,138 @@
+body {
+  background-color: #212121;
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.img > img {
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+}
+
+.img > input {
+  margin-top: 20px;
+  margin-left: 85px;
+  color: #212121;
+  background-color: transparent;
+  border: none;
+}
+
+.img {
+  display: flex;
+  flex-direction: column;
+  padding-right: 50px;
+}
+
+body > main {
+  display: flex;
+  justify-content: center;
+  background-color: #525252;
+  width: fit-content;
+  padding: 70px;
+  border-radius: 32px;
+  position: relative;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.name {
+  line-height: 10px;
+}
+
+.name > div > p {
+  color: #b7b7b7;
+}
+
+.name > div > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.name > div > div > h1,
+.name > div > div > h2 {
+  color: white;
+}
+
+.name > div > div > i {
+  font-size: 15px;
+  position: relative;
+  left: 20px;
+  color: white;
+  padding: 10px;
+  border-radius: 12px;
+}
+
+.name > div > div > i:hover {
+  background-color: #757575;
+}
+
+.chats_messages {
+  position: absolute;
+  bottom: 0;
+  right: 20px;
+  color: #212121 !important;
+}
+
+.chooseFile {
+  opacity: 0;
+  width: 250px;
+  height: 250px;
+  font-size: 100px;
+  position: absolute;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  transition: all 0.3s;
+  background-color: black;
+}
+
+.chooseFile:hover {
+  opacity: 0.6;
+}
+
+a {
+  color: white;
+  text-decoration: none;
+  position: absolute;
+  left: 30px;
+  top: 20px;
+  font-size: 30px;
+}
+
+/* Light mode */
+body.lightmode {
+  background-color: #f5f5f5;
+}
+
+body.lightmode .name > div > p {
+  color: #757575;
+}
+
+body.lightmode .name > div > div > h1,
+body.lightmode .name > div > div > h2 {
+  color: #525252;
+}
+
+input[type="text"] {
+  display: none;
+}
+
+
+body.lightmode > main {
+  background-color: #b7b7b7;
+}
+
+body.lightmode a {
+  color: #212121;
+}
+
+body.lightmode > div {
+  background-color: #b0b0b0;
+}

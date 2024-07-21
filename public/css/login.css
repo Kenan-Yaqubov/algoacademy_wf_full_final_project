@@ -1,0 +1,21 @@
+video {
+    right: 0;
+    left: 200px;
+}
+
+body {
+    overflow: hidden;
+}
+
+.div1 {
+    left: 0;
+    padding-top: 130px;
+}
+
+.input {
+    margin-top: 40px;
+}
+
+.div2 {
+    margin-top: 60px;
+}

@@ -1,0 +1,50 @@
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/public/css/register.css" />
+    <link rel="stylesheet" href="/public/css/login.css" />
+  </head>
+
+  <body>
+    <video autoplay loop muted playsinline>
+      <source src="/public/css/video2.mp4" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+    <div class="div1">
+      <h1>Log in to your account </h1>
+      <form id="loginForm" action="/login" method="post" >
+        <input
+          type="text"
+          name="email"
+          id="email"
+          placeholder="E-mail"
+          class="input"
+          required
+        />
+        <p class="issue" id="emailError">Email not found!</p>
+
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Enter Password"
+          class="input"
+          required
+        />
+        <p class="issue" id="passwordLengthError">Password is not correct.</p>
+
+        <button type="submit" id="button">Log in</button>
+        <div class="div2">
+          <label class="checkbox">
+            No account?
+            <a href="/register">Sign Up</a></label>
+        </div>
+      </form>
+    </div>
+    <script src="/public/login.js"></script>
+  </body>
+
+</html>

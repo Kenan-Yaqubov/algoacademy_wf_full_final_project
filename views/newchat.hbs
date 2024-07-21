@@ -1,0 +1,127 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/public/css/chatbot.css" />
+    <link rel="stylesheet" href="/public/css/newchat.css" />
+    <title>AI Chatbot</title>
+  </head>
+  <body>
+   <div class="main">
+      <aside>
+        <h1
+          class="h1"
+          style="position: static;margin-left: 30px;margin-top: 50px"
+        >Chats
+          <a href="/create" id="createChatBtn" style="text-decoration: none;"><i
+              class="fa-solid fa-plus"
+            ></i></a></h1>
+
+        <ul type="none" id="chats">
+          <li class="chat">New Chat</li>
+          <li class="chat">Hello World</li>
+          <li class="chat">Work in Japan</li>
+          <li class="chat">Depression</li>
+          <li class="chat">Song name</li>
+          <li class="chat">New Chat</li>
+          <li class="chat">Hello World</li>
+          <li class="chat">Work in Japan</li>
+          <li class="chat">Depression</li>
+          <li class="chat">Song name</li>
+          <li class="chat">New Chat</li>
+          <li class="chat">Hello World</li>
+          <li class="chat">Work in Japan</li>
+          <li class="chat">Depression</li>
+          <li class="chat">Song name</li>
+          <li class="chat">New Chat</li>
+          <li class="chat">Hello World</li>
+          <li class="chat">Work in Japan</li>
+          <li class="chat">Depression</li>
+          <li class="chat">Song name</li>
+          <li class="chat">New Chat</li>
+          <li class="chat">Hello World</li>
+          <li class="chat">Work in Japan</li>
+          <li class="chat">Depression</li>
+          <li class="chat">Song name</li>
+          <li class="chat">New Chat</li>
+          <li class="chat">Hello World</li>
+          <li class="chat">Work in Japan</li>
+          <li class="chat">Depression</li>
+          <li class="chat">Song name</li>
+          <li class="chat">New Chat</li>
+          <li class="chat">Hello World</li>
+          <li class="chat">Work in Japan</li>
+          <li class="chat">Depression</li>
+          <li class="chat">Song name</li>
+          <li class="chat">New Chat</li>
+          <li class="chat">Hello World</li>
+          <li class="chat">Work in Japan</li>
+          <li class="chat">Depression</li>
+          <li class="chat">Song name</li>
+          <li class="chat">New Chat</li>
+          <li class="chat">Hello World</li>
+          <li class="chat">Work in Japan</li>
+          <li class="chat">Depression</li>
+          <li class="chat">Song name</li>
+
+        </ul>
+      </aside>
+      <div class="respAside">
+        <i class="fa-solid fa-bars"></i>
+      </div>
+      <main>
+        <div class="profileDiv">
+          <h1 class="h1">AI Chatbot</h1>
+          <div>
+            <button type="button"><i class="fa-solid fa-moon"></i></button>
+            <a href="/profile">
+              <img
+                src="https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png"
+                alt="pfp"
+              />
+            </a>
+          </div>
+        </div>
+        <input type="text" id="userInput" placeholder="Send meassage" />
+        <button type="submit" id="inputBtn"><i
+            class="fa-solid fa-arrow-up"
+          ></i></button>
+        <div class="grey"><p>AI can have mistakes. Check important information
+            again.</p></div>
+        <div class="response_request">
+          <div id="welcome">
+            <h1>Welcome to AI chatbot</h1>
+            <p>Our AI chatbot can answer to all of your question and solve most
+              of your problems</p>
+          </div>
+        </div>
+      </main>
+    </div>
+    <div class="blur">
+      <a href="/">x</a>
+      <div class="newchat">
+        <h1>Create New Chat</h1>
+        <label
+          for="nameofchat"
+          title="*minimum 5 symbols, if you keep input empty, name will be ~ New chat ~"
+        >Name</label>
+        <input type="text" id="nameofchat" name="name" placeholder="New Chat" />
+        <label for="description" style="margin-top: 20px;">Description</label>
+        <textarea
+          type="text"
+          id="description"
+          name="description"
+          placeholder="No description"
+          rows="5"
+        ></textarea>
+        <button type="submit">Create</button>
+      </div>
+    </div>
+    <script src="/public/script.js"></script>
+    <script
+      src="https://kit.fontawesome.com/dd428618f9.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="/public/lightmode.js"></script>
+  </body>
+</html>
