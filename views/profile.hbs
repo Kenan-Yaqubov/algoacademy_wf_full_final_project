@@ -3,64 +3,50 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/public/css/profile.css" />
-    <title>Document</title>
+    <link rel="shortcut icon" href="favicon-32x32.png" type="image/x-icon">
+    <title>Profile</title>
   </head>
   <body>
     <a href="/"><i class="fa-solid fa-arrow-left-long"></i></a>
     <main>
-      <div class="img">
-        <img
-          src="https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png"
-        />
-        <input type="file" id="file" hidden />
-        <label for="file" class="chooseFile"><i
-            class="fa-regular fa-pen-to-square"
-          ></i></label>
-      </div>
-      <div class="name">
-        <div>
-          <p>
-            Name
-
-          </p>
-          <div>
-            <h1>NameName
-            </h1>
-            <input type="text" id="newName" />
-            <i class="fa-solid fa-pen" id="editBtnName"></i>
-
-          </div>
+      <form id="profileForm" enctype="multipart/form-data" action="/profile" method="POST">
+        <div class="img">
+          <img src={{user.profilePicture}} alt="Profile Picture" id="profilePicture"/>
+          <input type="file" name="profilePicture" id="file" accept="image/*" hidden/>
+          <label for="file" class="chooseFile"><i class="fa-regular fa-pen-to-square"></i></label>
         </div>
-        <div>
-          <p style="margin-top:50px;">
-            Email
-          </p>
+        <div class="name">
           <div>
-            <h2>emailexample@gmail.com</h2>
-            <input type="text" id="newEmail" />
-
-            <i class="fa-solid fa-pen" id="editBtnEmail"></i>
+            <p>Name</p>
+            <div>
+              <h1>{{user.username}}</h1>
+              <input type="text" name="newName" id="newName" />
+              <i class="fa-solid fa-pen" id="editBtnName"></i>
+            </div>
           </div>
-        </div>
-        <div>
-          <p style="margin-top:50px;">
-            Password
-          </p>
           <div>
-            <h2>12344.... </h2>
-            <input type="text" id="newPassword" />
-            <i class="fa-solid fa-pen" id="editBtnPassword"></i>
+            <p style="margin-top:50px;">Email</p>
+            <div>
+              <h2>{{user.email}}</h2>
+              <input type="text" name="newEmail" id="newEmail" />
+              <i class="fa-solid fa-pen" id="editBtnEmail"></i>
+            </div>
           </div>
+          <div>
+            <p style="margin-top:50px;">Password</p>
+            <div>
+              <h2>••••••••</h2>
+              <input type="password" name="newPassword" id="newPassword" />
+              <i class="fa-solid fa-pen" id="editBtnPassword"></i>
+            </div>
+          </div>
+        <button type="submit">Save Changes</button>
         </div>
-      </div>
-      <p class="chats_messages" style="color: #656565;margin-top: 80px">You have
-        0 chats and 0 messages</p>
+      </form>
+      <p class="chats_messages" style="color: #656565;margin-top: 80px">You have 0 chats and 0 messages</p>
     </main>
     <script src="/public/lightmode.js"></script>
     <script src="/public/profile.js"></script>
-    <script
-      src="https://kit.fontawesome.com/dd428618f9.js"
-      crossorigin="anonymous"
-    ></script>
+    <script src="https://kit.fontawesome.com/dd428618f9.js" crossorigin="anonymous"></script>
   </body>
 </html>

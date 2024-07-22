@@ -26,6 +26,10 @@ body {
   padding-right: 50px;
 }
 
+body > main > form {
+  display: flex;
+}
+
 body > main {
   display: flex;
   justify-content: center;
@@ -123,7 +127,6 @@ body.lightmode .name > div > div > h2 {
 input[type="text"] {
   display: none;
 }
-
 
 body.lightmode > main {
   background-color: #b7b7b7;

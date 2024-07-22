@@ -5,10 +5,9 @@ document.addEventListener("DOMContentLoaded", () => {
     button.addEventListener("click", () => {
       const parentDiv = button.parentElement;
       const hElement = parentDiv.querySelector("h1, h2");
-      const inputElement = parentDiv.querySelector('input[type="text"]');
+      const inputElement = parentDiv.querySelector('input[type="text"], input[type="password"]');
 
-      if (
-        inputElement.style.display == "none") {
+      if (inputElement.style.display == "none") {
         inputElement.style.display = "inline";
         hElement.style.display = "none";
         inputElement.focus();
@@ -18,4 +17,13 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
+
+  const profilePicture = document.getElementById("file"); 
+
+  profilePicture.onchange = (evt) => {
+    const [file] = profilePicture.files;
+    if (file) {
+      document.getElementById("profilePicture").src = URL.createObjectURL(file);
+    }
+  };
 });
