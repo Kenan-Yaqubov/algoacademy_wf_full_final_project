@@ -17,6 +17,45 @@ if (firstTimeCome) {
   console.log("Not First Time :)");
 }
 
+
+async function deleteChat(chatId) {
+  try {
+    const response = await fetch(`/delete-chat/${chatId}`, {
+      method: 'DELETE',
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const data = await response.json();
+    if (data.success) {
+      // Remove the chat item from the DOM
+      document.querySelector(`li[data-id='${chatId}']`).remove();
+      document.querySelector(`div[data-id='${chatId}']`).remove();
+      alert('Chat deleted successfully');
+    } else {
+      alert('Failed to delete chat');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('There was a problem deleting the chat.');
+  }
+}
+
+function display(el) {
+  const li = el.closest("li");
+  const div = li.nextElementSibling;
+
+  const isDivVisible = div.classList.contains('display');
+
+  document.querySelectorAll('.liDiv').forEach(d => d.classList.remove('display'));
+
+  if (!isDivVisible) {
+    div.classList.add('display');
+  }
+}
+
 async function submitInput() {
   const input = document.getElementById("userInput").value;
   const inputBtn = document.getElementById("inputBtn");
@@ -77,7 +116,6 @@ async function submitInput() {
   } catch (error) {
     console.error("There was a problem with the fetch operation:", error);
   } finally {
-    // Reset input field and enable button
     document.getElementById("userInput").value = "";
     applyMode();
     answerGiven = true;
@@ -85,20 +123,18 @@ async function submitInput() {
   }
 }
 
-// Function to add or remove lightmode classes
 function updateLightModeClasses(add) {
   const method = add ? "add" : "remove";
   document.body.classList[method]("lightmode");
   document
     .querySelectorAll(
-      ".response,#welcome, .request, h1.h1, #userInput, button#inputBtn, aside, a#createChatBtn, .profileDiv > div > a > img, .profileDiv > div > button > i, .chat, .grey, .profileDiv"
+      ".response, #welcome, .request, h1.h1, #userInput, button#inputBtn, aside, a#createChatBtn, .profileDiv > div > a > img, .profileDiv > div > button > i, .chat, .grey, .profileDiv"
     )
     .forEach((el) => {
       el.classList[method]("lightmode");
     });
 }
 
-// Light mode switching function
 function toggleLightMode() {
   const modeData = JSON.parse(localStorage.getItem("mode"));
   const newMode = modeData.mode === "darkmode" ? "lightmode" : "darkmode";
@@ -107,26 +143,22 @@ function toggleLightMode() {
   updateLightModeClasses(newMode === "lightmode");
 }
 
-// Function to apply the mode on page load
 function applyMode() {
   const modeData = JSON.parse(localStorage.getItem("mode"));
   updateLightModeClasses(modeData.mode === "lightmode");
 }
 
-// Assign onclick event handler to inputBtn
 document.getElementById("inputBtn").onclick = submitInput;
 
-// Event listener for pressing Enter key
 document
   .getElementById("userInput")
   .addEventListener("keydown", function (event) {
     if (event.key === "Enter" && answerGiven) {
       submitInput();
-      answerGiven = false; // Update answerGiven status
+      answerGiven = false; 
     }
   });
 
-// Ensure the DOM is fully loaded before assigning the toggleLightMode handler
 document.addEventListener("DOMContentLoaded", function () {
   document.querySelector(".profileDiv button").onclick = toggleLightMode;
   applyMode();

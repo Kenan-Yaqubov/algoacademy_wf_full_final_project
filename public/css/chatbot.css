@@ -19,7 +19,7 @@ body {
 .response,
 .request {
   font-family: Arial, sans-serif;
-  width: 90%;
+  width: 400px;
   max-width: 400px;
   background-color: #2f2f2f;
   padding: 8px 32px;
@@ -31,7 +31,7 @@ body {
 
 .response {
   position: relative;
-  right: 100%;
+  right: 0%;
 }
 
 .request {
@@ -56,7 +56,6 @@ main {
   margin-top: 30px;
   padding-bottom: 150px;
 }
-
 
 #userInput {
   position: fixed;
@@ -119,11 +118,10 @@ aside > h1 > a#createChatBtn {
   text-decoration: none;
   font-family: Arial, sans-serif;
   font-size: 20px;
-
 }
 
 aside > h1 > a#createChatBtn:hover {
-color: #bdbdbd;
+  color: #bdbdbd;
 }
 
 aside > button > i {
@@ -222,16 +220,56 @@ aside::-webkit-scrollbar-thumb:hover {
 
 .chat {
   color: white;
+  margin-top: 5px;
   font-family: Arial, sans-serif;
   margin-left: 0;
   padding: 0.63rem 1.25rem;
   font-size: 15px;
+  display: flex;
+  justify-content: space-between;
   margin-right: 20px;
   border-radius: 10px;
 }
 
+.chat > i {
+  display: none;
+  cursor: pointer;
+}
+
 .chat:hover {
   background-color: #343434;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.chat:hover > i {
+  display: flex;
+}
+
+.display {
+  display: block !important;
+}
+
+.liDiv {
+  display: none;
+  position: fixed;
+  left: 20%;
+  margin-top: -40px;
+  background-color: #343434;
+  padding: 10px 30px;
+  border-radius: 24px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  font-size: 16px;
+  line-height: 15px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.liDiv > p:hover {
+  font-weight: bold;
+}
+
+.liDiv > p > i {
+  margin-right: 5px;
 }
 
 .headerChat {
@@ -322,7 +360,7 @@ aside > a#createChatBtn.lightmode:hover {
   top: 200px;
 }
 
-.respAside{
+.respAside {
   color: #b7b7b7;
   font-size: 20px;
   margin-left: 20px;
@@ -372,7 +410,6 @@ body.lightmode::-webkit-scrollbar-thumb {
 body.lightmode::-webkit-scrollbar-thumb:hover {
   background: #555; /* color of the scroll thumb on hover */
 }
-
 
 @media (max-width: 900px) {
   #welcome {

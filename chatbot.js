@@ -6,18 +6,22 @@ const path = require("path");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const dotenv = require("dotenv");
 const session = require("express-session");
-const multer = require('multer');
+const multer = require("multer");
 
 dotenv.config();
 
 const app = express();
 const port = 3000;
 
+// Setup multer for file uploads
 const storage = multer.diskStorage({
-  destination: './uploads/',
+  destination: "./uploads/",
   filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-  }
+    cb(
+      null,
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+    );
+  },
 });
 
 const upload = multer({
@@ -25,8 +29,8 @@ const upload = multer({
   limits: { fileSize: 1000000 },
   fileFilter: function (req, file, cb) {
     checkFileType(file, cb);
-  }
-}).single('profilePicture');
+  },
+}).single("profilePicture");
 
 function checkFileType(file, cb) {
   const filetypes = /jpeg|jpg|png|gif/;
@@ -36,7 +40,7 @@ function checkFileType(file, cb) {
   if (extname && mimetype) {
     return cb(null, true);
   } else {
-    cb('Error: Images Only!');
+    cb("Error: Images Only!");
   }
 }
 
@@ -49,26 +53,56 @@ app.use(
   })
 );
 
-mongoose
-  .connect("mongodb://localhost:27017/user_authentication", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
-    console.log("Connected to MongoDB");
-  })
-  .catch((err) => {
-    console.error("MongoDB connection error:", err);
-  });
+// Connect to multiple databases
+const userDbUri = "mongodb://localhost:27017/user_authentication";
+const chatsDbUri = "mongodb://localhost:27017/chats";
+
+const userDb = mongoose.createConnection(userDbUri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+const chatsDb = mongoose.createConnection(chatsDbUri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+userDb.on("error", console.error.bind(console, "UserDB connection error:"));
+chatsDb.on("error", console.error.bind(console, "ChatsDB connection error:"));
+
+userDb.once("open", () => {
+  console.log("Connected to user_authentication database");
+});
+
+chatsDb.once("open", () => {
+  console.log("Connected to chats database");
+});
 
 const userSchema = new mongoose.Schema({
   username: String,
   email: String,
   password: String,
-  profilePicture: { type: String, default: "https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png" },
+  profilePicture: {
+    type: String,
+    default:
+      "https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png",
+  },
 });
 
-const User = mongoose.model("User", userSchema);
+const chatSchema = new mongoose.Schema({
+  id: Number,
+  title: String,
+  description: String,
+  messages: {
+    sender: String, // 'user' or 'ai'
+    content: String,
+    timestamp: { type: Date, default: Date.now },
+  },
+  userId: mongoose.Schema.Types.ObjectId,
+});
+
+const User = userDb.model("User", userSchema);
+const Chat = chatsDb.model("Chat", chatSchema);
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -99,10 +133,24 @@ app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/public", express.static(path.join(__dirname, "public")));
 
-
-app.get("/", (req, res) => {
-  res.render("chatbot");
+app.use(async (req, res, next) => {
+  if (req.session.userId) {
+    try {
+      const user = await User.findById(req.session.userId);
+      if (user) {
+        req.user = user;
+        res.locals.user = user;
+      } else {
+        delete req.session.userId;
+      }
+    } catch (err) {
+      console.error("Error fetching user data:", err);
+    }
+  }
+  next();
 });
+
+
 
 app.get("/create", (req, res) => {
   res.render("newchat");
@@ -127,7 +175,7 @@ app.post("/login", async (req, res) => {
     const user = await User.findOne({ email: req.body.email });
     if (user && (await bcrypt.compare(req.body.password, user.password))) {
       req.session.userId = user._id;
-      res.redirect("/profile");
+      res.redirect("/create");
     } else {
       res.redirect("/login");
     }
@@ -174,7 +222,7 @@ app.post("/profile", upload, async (req, res) => {
     if (req.file) {
       console.log("File uploaded:", req.file);
       user.profilePicture = `/uploads/${req.file.filename}`;
-      console.log(user.profilePicture)
+      console.log(user.profilePicture);
     }
 
     if (req.body.newName) {
@@ -191,10 +239,74 @@ app.post("/profile", upload, async (req, res) => {
 
     await user.save();
     res.redirect("/profile");
-
   } catch (err) {
     console.error("Error updating profile:", err);
     res.redirect("/profile");
+  }
+});
+
+app.get("/", async (req, res) => {
+  try {
+    const newChats = await Chat.find({ userId: req.session.userId }).sort({ id: -1 });
+    const user = await User.findById(req.session.userId);
+    res.render("chatbot", { newChats, user });
+  } catch (err) {
+    console.error("Error rendering chat:", err);
+    res.status(500).send("Error rendering chat.");
+  }
+});
+
+
+
+app.post("/create", async (req, res) => {
+  try {
+    let chatName = req.body.chatname || "New Chat";
+    let description = req.body.description || "No Description";
+
+    const chats = await Chat.find({});
+    let largestChatID = chats.length ? Math.max(...chats.map(chat => chat.id)) : 0;
+
+    // Create a new Chat document
+    const newChat = new Chat({
+      title: chatName,
+      description: description,
+      userId: req.session.userId,
+      id: largestChatID + 1,
+      messages: [],
+    });
+
+    await newChat.save();
+
+    // No need to store newChats in session, just redirect to the home page
+    res.redirect('/');
+  } catch (err) {
+    console.error("Error creating chat:", err);
+    res.status(500).send("Server error while creating chat.");
+  }
+});
+
+app.post("/logout", (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return res.status(500).send("Error logging out");
+    }
+    res.redirect("/login");
+  });
+});
+
+app.delete('/delete-chat/:id', async (req, res) => {
+  const chatId = parseInt(req.params.id);
+
+  try {
+    const result = await Chat.deleteOne({ id: chatId });
+
+    if (result.deletedCount > 0) {
+      res.json({ success: true });
+    } else {
+      res.json({ success: false, message: 'Chat not found' });
+    }
+  } catch (error) {
+    console.error('Error deleting chat:', error);
   }
 });
 

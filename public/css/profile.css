@@ -6,6 +6,20 @@ body {
   box-sizing: border-box;
 }
 
+main > i {
+  color: white;
+  position: absolute;
+  right: 20px;
+  top: 40px;
+  padding: 12px;
+  border-radius: 16px;
+  font-size: xx-large;
+}
+
+main > i:hover {
+  background-color: #212121;
+}
+
 .img > img {
   width: 250px;
   height: 250px;

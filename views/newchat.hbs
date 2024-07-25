@@ -101,13 +101,13 @@
     </div>
     <div class="blur">
       <a href="/">x</a>
-      <div class="newchat">
+            <form class="newchat" action="/create" method="post">
         <h1>Create New Chat</h1>
         <label
           for="nameofchat"
           title="*minimum 5 symbols, if you keep input empty, name will be ~ New chat ~"
         >Name</label>
-        <input type="text" id="nameofchat" name="name" placeholder="New Chat" />
+        <input type="text" id="nameofchat" name="chatname" placeholder="New Chat" />
         <label for="description" style="margin-top: 20px;">Description</label>
         <textarea
           type="text"
@@ -118,7 +118,7 @@
         ></textarea>
         <button type="submit">Create</button>
       </div>
-    </div>
+    </form>
     <script src="/public/script.js"></script>
     <script
       src="https://kit.fontawesome.com/dd428618f9.js"

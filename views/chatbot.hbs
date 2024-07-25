@@ -3,7 +3,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/public/css/chatbot.css" />
-    <link rel="shortcut icon" href="favicon-32x32.png" type="image/x-icon">
+    <link rel="shortcut icon" href="favicon-32x32.png" type="image/x-icon" />
 
     <title>AI Chatbot</title>
   </head>
@@ -18,52 +18,22 @@
               class="fa-solid fa-plus"
             ></i></a></h1>
 
-        <ul type="none" id="chats">
-          <li class="chat">New Chat</li>
-          <li class="chat">Hello World</li>
-          <li class="chat">Work in Japan</li>
-          <li class="chat">Depression</li>
-          <li class="chat">Song name</li>
-          <li class="chat">New Chat</li>
-          <li class="chat">Hello World</li>
-          <li class="chat">Work in Japan</li>
-          <li class="chat">Depression</li>
-          <li class="chat">Song name</li>
-          <li class="chat">New Chat</li>
-          <li class="chat">Hello World</li>
-          <li class="chat">Work in Japan</li>
-          <li class="chat">Depression</li>
-          <li class="chat">Song name</li>
-          <li class="chat">New Chat</li>
-          <li class="chat">Hello World</li>
-          <li class="chat">Work in Japan</li>
-          <li class="chat">Depression</li>
-          <li class="chat">Song name</li>
-          <li class="chat">New Chat</li>
-          <li class="chat">Hello World</li>
-          <li class="chat">Work in Japan</li>
-          <li class="chat">Depression</li>
-          <li class="chat">Song name</li>
-          <li class="chat">New Chat</li>
-          <li class="chat">Hello World</li>
-          <li class="chat">Work in Japan</li>
-          <li class="chat">Depression</li>
-          <li class="chat">Song name</li>
-          <li class="chat">New Chat</li>
-          <li class="chat">Hello World</li>
-          <li class="chat">Work in Japan</li>
-          <li class="chat">Depression</li>
-          <li class="chat">Song name</li>
-          <li class="chat">New Chat</li>
-          <li class="chat">Hello World</li>
-          <li class="chat">Work in Japan</li>
-          <li class="chat">Depression</li>
-          <li class="chat">Song name</li>
-          <li class="chat">New Chat</li>
-          <li class="chat">Hello World</li>
-          <li class="chat">Work in Japan</li>
-          <li class="chat">Depression</li>
-          <li class="chat">Song name</li>
+<ul type="none" id="chats">
+  {{#each newChats}}
+    <li class="chat" data-id="{{this.id}}">
+      {{this.title}}
+      <i class="fa-solid fa-ellipsis" onclick="display(this)"></i>
+    </li>
+    <div class="liDiv" data-id="{{this.id}}">
+      <p style="color: rgb(180, 0, 0);" onclick="deleteChat({{this.id}})">
+        <i class="fa-solid fa-dumpster"></i> Delete
+      </p>
+      <p style="color: grey;"><i class="fa-solid fa-gear"></i> Details</p>
+      <p style="color: cadetblue;"><i class="fa-solid fa-pen-to-square"></i> Edit</p>
+      <p style="color: pink;"><i class="fa-solid fa-heart"></i> Favourite</p>
+    </div>
+  {{/each}}
+</ul>
 
         </ul>
       </aside>
@@ -76,10 +46,7 @@
           <div>
             <button type="button"><i class="fa-solid fa-moon"></i></button>
             <a href="/profile">
-              <img
-                src="https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png"
-                alt="pfp"
-              />
+              <img src="{{user.profilePicture}}"  />
             </a>
           </div>
         </div>

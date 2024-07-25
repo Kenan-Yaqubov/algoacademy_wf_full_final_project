@@ -22,7 +22,6 @@ function loginCheck(event) {
   
 
     if (valid) {
-      alert("Successful log in!");
       document.getElementById("loginForm").submit();
     }
   }
