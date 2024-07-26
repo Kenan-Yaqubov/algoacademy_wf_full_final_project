@@ -56,6 +56,22 @@ function display(el) {
   }
 }
 
+function display2(el, divClass, divClass2) {
+  const div = el.nextElementSibling;
+
+  const isDivVisible = div.classList.contains('display');
+
+  document.querySelectorAll(`.${divClass}, .${divClass2}`).forEach(d => d.classList.remove('display'));
+
+  document.querySelector('main').style.zIndex='-1'
+
+  if (!isDivVisible) {
+    div.classList.add('display');
+  }
+}
+
+
+
 async function submitInput() {
   const input = document.getElementById("userInput").value;
   const inputBtn = document.getElementById("inputBtn");
@@ -123,6 +139,47 @@ async function submitInput() {
   }
 }
 
+function toggleFavourite(chatId, element) {
+  fetch(`/toggle-favourite`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ chatId }),
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Toggle the icon class based on the new favourite status
+        const icon = element.querySelector("i");
+        if (data.favourite) {
+          icon.classList.add("fav");
+        } else {
+          icon.classList.remove("fav");
+        }
+      } else {
+        alert('Failed to toggle favourite status');
+      }
+    })
+    .catch(error => console.error("Error updating favourite status:", error));
+}
+
+function searchChats() {
+  const input = document.getElementById('searchBar').value.toLowerCase();
+  const chats = document.querySelectorAll('#chats .chat');
+
+  chats.forEach(chat => {
+    const title = chat.textContent.toLowerCase();
+    if (title.includes(input)) {
+      chat.style.display = 'block';
+    } else {
+      chat.style.display = 'none';
+    }
+  });
+}
+
+
+
 function updateLightModeClasses(add) {
   const method = add ? "add" : "remove";
   document.body.classList[method]("lightmode");
@@ -158,6 +215,8 @@ document
       answerGiven = false; 
     }
   });
+
+  
 
 document.addEventListener("DOMContentLoaded", function () {
   document.querySelector(".profileDiv button").onclick = toggleLightMode;

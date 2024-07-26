@@ -1,76 +1,104 @@
+<!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/public/css/chatbot.css" />
-    <link rel="shortcut icon" href="favicon-32x32.png" type="image/x-icon" />
-
     <title>AI Chatbot</title>
-  </head>
-  <body>
+</head>
+<body>
     <div class="main">
-      <aside>
-        <h1
-          class="h1"
-          style="position: static;margin-left: 30px;margin-top: 50px"
-        >Chats
-          <a href="/create" id="createChatBtn" style="text-decoration: none;"><i
-              class="fa-solid fa-plus"
-            ></i></a></h1>
+        <aside>
+            <h1 class="h1" style="position: static; margin-left: 30px; margin-top: 50px;">
+                Chats
+                <a href="/create" id="createChatBtn" style="text-decoration: none;">
+                    <i class="fa-solid fa-plus"></i>
+                </a>
+            </h1>
+            <input 
+                type="text" 
+                id="searchBar" 
+                placeholder="Search chats..." 
+                onkeyup="searchChats()" 
+                style="margin: 10px 30px;"
+            />
 
-<ul type="none" id="chats">
-  {{#each newChats}}
-    <li class="chat" data-id="{{this.id}}">
-      {{this.title}}
-      <i class="fa-solid fa-ellipsis" onclick="display(this)"></i>
-    </li>
-    <div class="liDiv" data-id="{{this.id}}">
-      <p style="color: rgb(180, 0, 0);" onclick="deleteChat({{this.id}})">
-        <i class="fa-solid fa-dumpster"></i> Delete
-      </p>
-      <p style="color: grey;"><i class="fa-solid fa-gear"></i> Details</p>
-      <p style="color: cadetblue;"><i class="fa-solid fa-pen-to-square"></i> Edit</p>
-      <p style="color: pink;"><i class="fa-solid fa-heart"></i> Favourite</p>
-    </div>
-  {{/each}}
-</ul>
+            <ul type="none" id="chats">
+                {{#each newChats}}
+                <li class="chat" data-id="{{this.id}}">
+                     {{this.title}}
+                    <i class="fa-solid fa-ellipsis" onclick="display(this)"></i>
+                </li>
+                <div class="liDiv" data-id="{{this.id}}">
+                    <p style="color: rgb(180, 0, 0); cursor: pointer;" onclick="deleteChat({{this.id}})">
+                        <i class="fa-solid fa-dumpster"></i> Delete
+                    </p>
+                    <p style="color: grey;" onclick="display2(this, 'details', 'edit')">
+                        <i class="fa-solid fa-gear"></i> Details
+                    </p>
+                    <div class="details">
+                        <p class="name"><b>Title</b>: {{this.title}}</p>
+                        <p class="description"><b>Description</b>: {{this.description}}</p>
+                    </div>
+                    <p style="color: cadetblue;" onclick="display2(this, 'edit', 'details')">
+                        <i class="fa-solid fa-pen-to-square"></i> Edit
+                    </p>
+                    <div class="edit">
+                        <form action="/" method="POST">
+                            <input type="hidden" name="chatId" value="{{this.id}}" />
+                            <p class="name"><b>Title</b>: <input type="text" name="editChatTitle" value="{{this.title}}" /></p>
+                            <p class="description">
+                                <b>Description</b>: 
+                                <textarea name="editChatDesc">{{this.description}}</textarea>
+                            </p>
+                            <button type="submit">Save</button>
+                        </form>
+                    </div>
+                    <p style="color: pink;" onclick="toggleFavourite({{this.id}}, this)">
+                        <i class="fa-solid fa-heart i {{#if this.favourite}} fav{{/if}}"></i> Favourite
+                    </p>
+                </div>
+                {{/each}}
+            </ul>
+        </aside>
 
-        </ul>
-      </aside>
-      <div class="respAside">
-        <i class="fa-solid fa-bars"></i>
-      </div>
-      <main>
-        <div class="profileDiv">
-          <h1 class="h1">AI Chatbot</h1>
-          <div>
-            <button type="button"><i class="fa-solid fa-moon"></i></button>
-            <a href="/profile">
-              <img src="{{user.profilePicture}}"  />
-            </a>
-          </div>
+        <div class="respAside">
+            <i class="fa-solid fa-bars"></i>
         </div>
-        <input type="text" id="userInput" placeholder="Send meassage" />
-        <button type="submit" id="inputBtn"><i
-            class="fa-solid fa-arrow-up"
-          ></i></button>
-        <div class="grey"><p>AI can have mistakes. Check important information
-            again.</p></div>
-        <div class="response_request">
-          <div id="welcome">
-            <h1>Welcome to AI chatbot</h1>
-            <p>Our AI chatbot can answer to all of your question and solve most
-              of your problems</p>
-          </div>
-        </div>
-      </main>
+
+        <main>
+            <div class="profileDiv">
+                <h1 class="h1">AI Chatbot</h1>
+                <div>
+                    <a href="/favs" class="favsLink">
+                        <i class="fa-solid fa-heart"></i>
+                    </a>
+                    <button type="button">
+                        <i class="fa-solid fa-moon"></i>
+                    </button>
+                    <a href="/profile">
+                        <img src="{{user.profilePicture}}" />
+                    </a>
+                </div>
+            </div>
+            <input type="text" id="userInput" placeholder="Send meassage" />
+            <button type="submit" id="inputBtn">
+                <i class="fa-solid fa-arrow-up"></i>
+            </button>
+            <div class="grey">
+                <p>AI can have mistakes. Check important information again.</p>
+            </div>
+            <div class="response_request">
+                <div id="welcome">
+                    <h1>Welcome to AI chatbot</h1>
+                    <p>Our AI chatbot can answer to all of your question and solve most of your problems</p>
+                </div>
+            </div>
+        </main>
     </div>
-    <script src="/public/lightmode.js">
-    </script>
+
+    <script src="/public/lightmode.js"></script>
     <script src="/public/script.js"></script>
-    <script
-      src="https://kit.fontawesome.com/dd428618f9.js"
-      crossorigin="anonymous"
-    ></script>
-  </body>
+    <script src="https://kit.fontawesome.com/dd428618f9.js" crossorigin="anonymous"></script>
+</body>
 </html>

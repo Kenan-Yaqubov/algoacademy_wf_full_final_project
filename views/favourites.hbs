@@ -1,0 +1,26 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/public/css/favourites.css" />
+    <title>Favourites</title>
+  </head>
+  <body>
+    <a href="/"><i class="fa-solid fa-arrow-left-long"></i></a>
+    <h1>Favourites</h1>
+    <div class="mainFav">
+      {{#each favouriteChats}}
+        <div class="favs">
+          <h2>{{this.title}}</h2>
+          <p>{{this.description}}</p>
+        </div>
+      {{/each}}
+    </div>
+    <script
+      src="https://kit.fontawesome.com/dd428618f9.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="/public/script.js"></script>
+    <script src="/public/lightmode.js"></script>
+  </body>
+</html>

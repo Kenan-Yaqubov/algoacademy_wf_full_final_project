@@ -93,13 +93,15 @@ const chatSchema = new mongoose.Schema({
   id: Number,
   title: String,
   description: String,
-  messages: {
+  favourite: Boolean,
+  messages: [{
     sender: String, // 'user' or 'ai'
     content: String,
     timestamp: { type: Date, default: Date.now },
-  },
+  }],
   userId: mongoose.Schema.Types.ObjectId,
 });
+
 
 const User = userDb.model("User", userSchema);
 const Chat = chatsDb.model("Chat", chatSchema);
@@ -272,7 +274,8 @@ app.post("/create", async (req, res) => {
       description: description,
       userId: req.session.userId,
       id: largestChatID + 1,
-      messages: [],
+      messages: {},
+      favourite: false,
     });
 
     await newChat.save();
@@ -293,6 +296,32 @@ app.post("/logout", (req, res) => {
     res.redirect("/login");
   });
 });
+app.post("/", async (req, res) => {
+  const chatId = parseInt(req.body.chatId, 10);
+  console.log(`Received chatId: ${chatId}`); // Log the chatId value
+  const editChatTitle = req.body.editChatTitle;
+  const editChatDesc = req.body.editChatDesc;
+
+  if (isNaN(chatId)) {
+    return res.status(400).send("Invalid chat ID");
+  }
+
+  try {
+    const chat = await Chat.findOne({ id: chatId });
+    if (chat) {
+      chat.title = editChatTitle || chat.title;
+      chat.description = editChatDesc || chat.description;
+      await chat.save();
+      res.redirect('/');
+    } else {
+      res.status(404).send("Chat not found");
+    }
+  } catch (err) {
+    console.error("Error updating chat:", err);
+    res.status(500).send("Server error while updating chat.");
+  }
+});
+
 
 app.delete('/delete-chat/:id', async (req, res) => {
   const chatId = parseInt(req.params.id);
@@ -307,6 +336,42 @@ app.delete('/delete-chat/:id', async (req, res) => {
     }
   } catch (error) {
     console.error('Error deleting chat:', error);
+  }
+});
+
+app.get("/favs", async (req, res) => {
+  try {
+    // Fetch favourite chats
+    const favouriteChats = await Chat.find({ userId: req.session.userId, favourite: true }).sort({ id: -1 });
+    const user = await User.findById(req.session.userId);
+    res.render("favourites", { favouriteChats, user });
+  } catch (err) {
+    console.error("Error rendering favourite chats:", err);
+    res.status(500).send("Error rendering favourite chats.");
+  }
+});
+
+app.post("/toggle-favourite", async (req, res) => {
+  const chatId = parseInt(req.body.chatId, 10);
+  
+  if (isNaN(chatId)) {
+    return res.status(400).send("Invalid chat ID");
+  }
+
+  try {
+    const chat = await Chat.findOne({ id: chatId, userId: req.session.userId });
+    if (!chat) {
+      return res.status(404).send("Chat not found");
+    }
+
+    // Toggle the favourite status
+    chat.favourite = !chat.favourite;
+    await chat.save();
+
+    res.json({ success: true, favourite: chat.favourite });
+  } catch (err) {
+    console.error("Error toggling favourite:", err);
+    res.status(500).send("Server error while toggling favourite.");
   }
 });
 

@@ -50,6 +50,7 @@ main {
   position: relative;
   top: 70px;
   left: 30%;
+  z-index: 0;
 }
 
 .response_request {
@@ -221,6 +222,8 @@ aside::-webkit-scrollbar-thumb:hover {
 .chat {
   color: white;
   margin-top: 5px;
+  position: relative;
+  top: -20px;
   font-family: Arial, sans-serif;
   margin-left: 0;
   padding: 0.63rem 1.25rem;
@@ -247,6 +250,43 @@ aside::-webkit-scrollbar-thumb:hover {
 
 .display {
   display: block !important;
+}
+
+.details, .edit {
+  display: none;
+  width: 120%;
+  padding: 20px;
+  line-height: 20px;
+  position: absolute;
+  border-radius: 24px;
+  border-top-left-radius: 0;
+  background-color: #343434;
+  left: 100%;
+  top: 50px;
+}
+
+.favsLink {
+  font-size: 30px;
+  margin-right: 10px;
+  color: red;
+}
+
+#searchBar {
+  background-color: white;
+  border: 8px solid #686868;
+  color: #686868;
+  font-size: 16px;
+  padding: 10px 16px;
+  border-radius: 16px;
+  margin: auto;
+}
+
+.i {
+  color: grey;
+}
+
+.i.fav {
+  color: pink;
 }
 
 .liDiv {
@@ -276,6 +316,13 @@ aside::-webkit-scrollbar-thumb:hover {
   font-weight: 600;
   color: white;
 }
+
+#searchBar.lightmode {
+  border-color: #b7b7b7;
+  background-color: #ffffff;
+  color: #212121;
+}
+
 
 body.lightmode {
   background-color: #f5f5f5;
@@ -384,57 +431,14 @@ aside > a#createChatBtn.lightmode:hover {
   width: 15px;
 }
 
-/* Track */
-body::-webkit-scrollbar-track {
-  background: #424242;
+::-webkit-scrollbar-track {
+  background: #343434;
 }
 
-/* Handle */
-body::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
   background: #686868;
 }
 
-/* Handle on hover */
-body::-webkit-scrollbar-thumb:hover {
+::-webkit-scrollbar-thumb:hover {
   background: #808080;
-}
-
-body.lightmode::-webkit-scrollbar-track {
-  background: #f1f1f1; /* color of the tracking area */
-}
-
-body.lightmode::-webkit-scrollbar-thumb {
-  background: #888; /* color of the scroll thumb */
-}
-
-body.lightmode::-webkit-scrollbar-thumb:hover {
-  background: #555; /* color of the scroll thumb on hover */
-}
-
-@media (max-width: 900px) {
-  #welcome {
-    left: 0;
-  }
-  aside {
-    display: none;
-  }
-  #userInput {
-    width: 80%;
-    left: 10%;
-  }
-  button#inputBtn {
-    right: 12%;
-  }
-  .profileDiv {
-    right: 0;
-  }
-  main {
-    left: 0;
-  }
-  .respAside {
-    display: inline;
-  }
-}
-
-@media (max-width: 500px) {
 }
