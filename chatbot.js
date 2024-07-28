@@ -167,10 +167,44 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/chat", async (req, res) => {
-  const userInput = req.body.input;
-  const aiResponse = await getAIResponse(userInput);
-  res.json({ reply: aiResponse });
+  const { input, chatId } = req.body; // Extract chatId
+
+  console.log("Received input:", input);
+  console.log("Chat ID:", chatId); // Check if chatId is undefined
+
+  if (!chatId) {
+    return res.status(400).send("Chat ID is required.");
+  }
+
+  try {
+    // Fetch the current chat (if applicable)
+    const chat = await Chat.findOne({ userId: req.session.userId, id: chatId });
+
+    if (chat) {
+      chat.messages.push({
+        sender: 'user',
+        content: input,
+      });
+
+      const aiResponse = await getAIResponse(input);
+      chat.messages.push({
+        sender: 'ai',
+        content: aiResponse,
+      });
+
+      await chat.save();
+      res.json({ reply: aiResponse });
+    } else {
+      console.log("Chat not found.");
+      res.status(404).send("Chat not found.");
+    }
+  } catch (err) {
+    console.error("Error saving message:", err);
+    res.status(500).send("Error saving message.");
+  }
 });
+
+
 
 app.post("/login", async (req, res) => {
   try {
@@ -274,7 +308,7 @@ app.post("/create", async (req, res) => {
       description: description,
       userId: req.session.userId,
       id: largestChatID + 1,
-      messages: {},
+      messages: [],
       favourite: false,
     });
 
@@ -288,6 +322,27 @@ app.post("/create", async (req, res) => {
   }
 });
 
+app.get('/get-chat/:id', async (req, res) => {
+  const chatId = parseInt(req.params.id, 10);
+  
+  if (isNaN(chatId)) {
+    return res.status(400).send("Invalid chat ID");
+  }
+
+  try {
+    const chat = await Chat.findOne({ id: chatId, userId: req.session.userId });
+    if (!chat) {
+      return res.status(404).send("Chat not found");
+    }
+
+    res.json({ chat });
+  } catch (err) {
+    console.error("Error fetching chat:", err);
+    res.status(500).send("Server error while fetching chat.");
+  }
+});
+
+
 app.post("/logout", (req, res) => {
   req.session.destroy((err) => {
     if (err) {
@@ -296,6 +351,8 @@ app.post("/logout", (req, res) => {
     res.redirect("/login");
   });
 });
+
+
 app.post("/", async (req, res) => {
   const chatId = parseInt(req.body.chatId, 10);
   console.log(`Received chatId: ${chatId}`); // Log the chatId value
@@ -374,6 +431,8 @@ app.post("/toggle-favourite", async (req, res) => {
     res.status(500).send("Server error while toggling favourite.");
   }
 });
+
+
 
 
 app.listen(port, async () => {

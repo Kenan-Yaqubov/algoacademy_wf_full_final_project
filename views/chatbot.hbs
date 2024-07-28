@@ -25,7 +25,7 @@
 
             <ul type="none" id="chats">
                 {{#each newChats}}
-                <li class="chat" data-id="{{this.id}}">
+                <li class="chat" data-id="{{this.id}}" onclick="switchChat({{this.id}})">
                      {{this.title}}
                     <i class="fa-solid fa-ellipsis" onclick="display(this)"></i>
                 </li>
@@ -62,10 +62,52 @@
             </ul>
         </aside>
 
-        <div class="respAside">
+        <div class="respAsideBtn" onclick="displayRespAsideFn()">
             <i class="fa-solid fa-bars"></i>
         </div>
-
+        <div class="respAside">
+            <h1 class="h1" style="position: static; margin-left: 30px; margin-top: 50px;">
+                Chats
+              <a href="/create" id="createChatBtn" style="text-decoration: none;">
+                    <i class="fa-solid fa-plus" style="color: white;margin-right: 20px"></i>
+                </a>
+            </h1>
+          {{#each newChats}}
+                <li class="chat" data-id="{{this.id}}" onclick="twofn({{this.id}})">
+                     {{this.title}}
+                    <i class="fa-solid fa-ellipsis" onclick="display(this)"></i>
+                </li>
+                <div class="liDiv" data-id="{{this.id}}">
+                    <p style="color: rgb(180, 0, 0); cursor: pointer;" onclick="deleteChat({{this.id}})">
+                        <i class="fa-solid fa-dumpster"></i> Delete
+                    </p>
+                    <p style="color: grey;" onclick="display2(this, 'details', 'edit')">
+                        <i class="fa-solid fa-gear"></i> Details
+                    </p>
+                    <div class="details">
+                        <p class="name"><b>Title</b>: {{this.title}}</p>
+                        <p class="description"><b>Description</b>: {{this.description}}</p>
+                    </div>
+                    <p style="color: cadetblue;" onclick="display2(this, 'edit', 'details')">
+                        <i class="fa-solid fa-pen-to-square"></i> Edit
+                    </p>
+                    <div class="edit">
+                        <form action="/" method="POST">
+                            <input type="hidden" name="chatId" value="{{this.id}}" />
+                            <p class="name"><b>Title</b>: <input type="text" name="editChatTitle" value="{{this.title}}" /></p>
+                            <p class="description">
+                                <b>Description</b>: 
+                                <textarea name="editChatDesc">{{this.description}}</textarea>
+                            </p>
+                            <button type="submit">Save</button>
+                        </form>
+                    </div>
+                    <p style="color: pink;" onclick="toggleFavourite({{this.id}}, this)">
+                        <i class="fa-solid fa-heart i {{#if this.favourite}} fav{{/if}}"></i> Favourite
+                    </p>
+                </div>
+                {{/each}}
+        </div>
         <main>
             <div class="profileDiv">
                 <h1 class="h1">AI Chatbot</h1>
@@ -88,7 +130,7 @@
             <div class="grey">
                 <p>AI can have mistakes. Check important information again.</p>
             </div>
-            <div class="response_request">
+            <div class="response_request" id="chatMessages">
                 <div id="welcome">
                     <h1>Welcome to AI chatbot</h1>
                     <p>Our AI chatbot can answer to all of your question and solve most of your problems</p>

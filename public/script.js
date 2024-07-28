@@ -1,6 +1,5 @@
 // Define answerGiven globally or in a scope accessible to both functions
 let answerGiven = true;
-
 // Initialize firstTimeCome in localStorage if not already set
 if (localStorage.getItem("firstTimeCome") === null) {
   localStorage.setItem("firstTimeCome", JSON.stringify(true));
@@ -17,95 +16,10 @@ if (firstTimeCome) {
   console.log("Not First Time :)");
 }
 
-
 async function deleteChat(chatId) {
   try {
     const response = await fetch(`/delete-chat/${chatId}`, {
-      method: 'DELETE',
-    });
-
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-
-    const data = await response.json();
-    if (data.success) {
-      // Remove the chat item from the DOM
-      document.querySelector(`li[data-id='${chatId}']`).remove();
-      document.querySelector(`div[data-id='${chatId}']`).remove();
-      alert('Chat deleted successfully');
-    } else {
-      alert('Failed to delete chat');
-    }
-  } catch (error) {
-    console.error('Error:', error);
-    alert('There was a problem deleting the chat.');
-  }
-}
-
-function display(el) {
-  const li = el.closest("li");
-  const div = li.nextElementSibling;
-
-  const isDivVisible = div.classList.contains('display');
-
-  document.querySelectorAll('.liDiv').forEach(d => d.classList.remove('display'));
-
-  if (!isDivVisible) {
-    div.classList.add('display');
-  }
-}
-
-function display2(el, divClass, divClass2) {
-  const div = el.nextElementSibling;
-
-  const isDivVisible = div.classList.contains('display');
-
-  document.querySelectorAll(`.${divClass}, .${divClass2}`).forEach(d => d.classList.remove('display'));
-
-  document.querySelector('main').style.zIndex='-1'
-
-  if (!isDivVisible) {
-    div.classList.add('display');
-  }
-}
-
-
-
-async function submitInput() {
-  const input = document.getElementById("userInput").value;
-  const inputBtn = document.getElementById("inputBtn");
-
-  if (input.trim() === "") return;
-
-  inputBtn.disabled = true;
-
-  // Create and append user message
-  const userMessage = document.createElement("div");
-  userMessage.classList.add("request", "fade-in");
-  userMessage.innerHTML = `
-      <b style="position:relative;top: 10px;">User:</b>
-      <p>${input}</p>
-    `;
-
-  const welcomeElement = document.getElementById("welcome");
-
-  if (welcomeElement) {
-    welcomeElement.remove();
-    answerGiven = false;
-  }
-
-  document.querySelector(".response_request").appendChild(userMessage);
-  applyMode();
-
-  try {
-    // Fetch response from server
-    const response = await fetch("/chat", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ input }),
+      method: "DELETE",
     });
 
     if (!response.ok) {
@@ -113,22 +27,165 @@ async function submitInput() {
     }
 
     const data = await response.json();
+    if (data.success) {
+      // Remove the chat item from the DOM
+      document.querySelector(`li[data-id='${chatId}']`).remove();
+      document.querySelector(`div[data-id='${chatId}']`).remove();
+      alert("Chat deleted successfully");
+    } else {
+      alert("Failed to delete chat");
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    alert("There was a problem deleting the chat.");
+  }
+}
 
-    // Process response
+function display(el) {
+  const li = el.closest("li");
+  const div = li.nextElementSibling;
+
+  const isDivVisible = div.classList.contains("display");
+
+  document
+    .querySelectorAll(".liDiv")
+    .forEach((d) => d.classList.remove("display"));
+
+  if (!isDivVisible) {
+    div.classList.add("display");
+  }
+}
+
+function display2(el, divClass, divClass2) {
+  const div = el.nextElementSibling;
+
+  const isDivVisible = div.classList.contains("display");
+
+  document
+    .querySelectorAll(`.${divClass}, .${divClass2}`)
+    .forEach((d) => d.classList.remove("display"));
+
+  document.querySelector("main").style.zIndex = "-1";
+
+  if (!isDivVisible) {
+    div.classList.add("display");
+  }
+}
+
+async function switchChat(chatId) {
+  try {
+    localStorage.setItem("chatId", chatId);
+    const response = await fetch(`/get-chat/${chatId}`);
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    const data = await response.json();
+    displayChatMessages(data.chat);
+  } catch (error) {
+    console.error("Error:", error);
+    alert("There was a problem loading the chat.");
+  }
+}
+
+function displayChatMessages(chat) {
+  const chatMessagesContainer = document.querySelector(".response_request");
+  chatMessagesContainer.innerHTML = ""; // Clear current messages
+
+  if (chat.messages.length === 0) {
+    const startMessage = document.createElement("h1");
+    startMessage.classList.add("startMessage");
+    startMessage.textContent = "Start your legendary chat!";
+    chatMessagesContainer.appendChild(startMessage);
+  } else {
+    chatMessagesContainer.innerHTML = "";
+    chat.messages.forEach((message) => {
+      const messageDiv = document.createElement("div");
+      messageDiv.classList.add(
+        message.sender === "user" ? "request" : "response",
+        "fade-in"
+      );
+      messageDiv.innerHTML = `
+        <b style="position:relative;top: 10px;">${
+          message.sender === "user" ? "User" : "Chatbot"
+        }:</b>
+        <p>${
+          message.content || "No content"
+        }</p> <!-- Handle undefined content -->
+      `;
+      chatMessagesContainer.appendChild(messageDiv);
+    });
+  }
+
+  applyMode(); // Apply the current mode (light/dark)
+}
+
+// Add event listeners for chat items
+document.querySelectorAll(".chat").forEach((chat) => {
+  chat.addEventListener("click", function () {
+    const chatId = this.getAttribute("data-id");
+    switchChat(chatId);
+  });
+});
+
+async function submitInput() {
+  const input = document.getElementById("userInput").value;
+  const inputBtn = document.getElementById("inputBtn");
+  const chatMessagesContainer = document.querySelector(".response_request");
+
+  if (input.trim() === "") return;
+
+  inputBtn.disabled = true;
+
+  // Remove the start message if it exists
+  const startMessage = document.querySelector(".startMessage");
+  if (startMessage) {
+    startMessage.remove();
+  }
+
+  const userMessage = document.createElement("div");
+  userMessage.classList.add("request", "fade-in");
+  userMessage.innerHTML = `
+      <b style="position:relative;top: 10px;">User:</b>
+      <p>${input}</p>
+    `;
+
+  chatMessagesContainer.appendChild(userMessage);
+  applyMode();
+
+  let chatId = localStorage.getItem("chatId");
+
+  try {
+    const response = await fetch("/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ input, chatId }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text(); // Read the error response
+      throw new Error(
+        `Network response was not ok: ${response.statusText}. ${errorText}`
+      );
+    }
+
+    const data = await response.json();
+
     let text = data.reply.replace(/## (.*?)(\n|$)/g, "<h2>$1</h2>$2");
     text = text.replace(/\*\s\*\*(.*?)\*\*/g, "<br><br><b>$1</b>");
     text = text.replace(/\*\*(.*?)\*\*/g, "<b>$1</b><br>");
     text = text.replace(/\*/g, "<br>");
 
-    // Create and append chatbot message
     const chatbotMessage = document.createElement("div");
     chatbotMessage.classList.add("response", "fade-in");
     chatbotMessage.innerHTML = `
         <b style="position:relative;top: 10px;">Chatbot:</b>
-        <p>${text}</p>
+        <p>${text || "No response"}</p> <!-- Handle undefined response -->
       `;
 
-    document.querySelector(".response_request").appendChild(chatbotMessage);
+    chatMessagesContainer.appendChild(chatbotMessage);
   } catch (error) {
     console.error("There was a problem with the fetch operation:", error);
   } finally {
@@ -139,6 +196,7 @@ async function submitInput() {
   }
 }
 
+
 function toggleFavourite(chatId, element) {
   fetch(`/toggle-favourite`, {
     method: "POST",
@@ -147,8 +205,8 @@ function toggleFavourite(chatId, element) {
     },
     body: JSON.stringify({ chatId }),
   })
-    .then(response => response.json())
-    .then(data => {
+    .then((response) => response.json())
+    .then((data) => {
       if (data.success) {
         // Toggle the icon class based on the new favourite status
         const icon = element.querySelector("i");
@@ -158,27 +216,35 @@ function toggleFavourite(chatId, element) {
           icon.classList.remove("fav");
         }
       } else {
-        alert('Failed to toggle favourite status');
+        alert("Failed to toggle favourite status");
       }
     })
-    .catch(error => console.error("Error updating favourite status:", error));
+    .catch((error) => console.error("Error updating favourite status:", error));
 }
 
 function searchChats() {
-  const input = document.getElementById('searchBar').value.toLowerCase();
-  const chats = document.querySelectorAll('#chats .chat');
+  const input = document.getElementById("searchBar").value.toLowerCase();
+  const chats = document.querySelectorAll("#chats .chat");
 
-  chats.forEach(chat => {
+  chats.forEach((chat) => {
     const title = chat.textContent.toLowerCase();
     if (title.includes(input)) {
-      chat.style.display = 'block';
+      chat.style.display = "block";
     } else {
-      chat.style.display = 'none';
+      chat.style.display = "none";
     }
   });
+};
+
+function displayRespAsideFn() {
+  let respAside = document.querySelector('.respAside')
+  respAside.classList.toggle('displayAside')
 }
 
-
+function twofn(arg) {
+  switchChat(arg);
+  displayRespAsideFn(); 
+}
 
 function updateLightModeClasses(add) {
   const method = add ? "add" : "remove";
@@ -212,11 +278,9 @@ document
   .addEventListener("keydown", function (event) {
     if (event.key === "Enter" && answerGiven) {
       submitInput();
-      answerGiven = false; 
+      answerGiven = false;
     }
   });
-
-  
 
 document.addEventListener("DOMContentLoaded", function () {
   document.querySelector(".profileDiv button").onclick = toggleLightMode;
