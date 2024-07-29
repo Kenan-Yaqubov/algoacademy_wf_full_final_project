@@ -46,6 +46,19 @@ body {
     word-break: break-all;
     white-space: normal;
   }
+
+  @media (max-width: 460px) {
+    body .mainFav {
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+    }
+
+    body .favs {
+      width: 110px;
+      padding: 10px;
+    }
+
+  }
   
   /* Styles for light mode */
   body.lightmode {

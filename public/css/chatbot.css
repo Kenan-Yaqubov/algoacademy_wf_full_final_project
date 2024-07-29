@@ -194,6 +194,21 @@ aside::-webkit-scrollbar-thumb:hover {
   align-items: center;
 }
 
+@media (max-width: 1400px) {
+  .profileDiv {
+    width: 65%;
+  }
+
+  #welcome {
+    left: 70px !important;
+    top: 200px !important;
+  }
+
+  #searchBar {
+    display: none;
+  }
+}
+
 .profileDiv > div {
   display: flex;
   align-items: center;
@@ -268,6 +283,7 @@ aside::-webkit-scrollbar-thumb:hover {
 
   .request {
     left: 10%;
+    margin-top: 40px;
   }
 
 }
@@ -528,6 +544,14 @@ aside > a#createChatBtn.lightmode:hover {
 .respAside > .chat {
   top: 10px;
   left: 10px;
+}
+
+.respAside > .chat > i {
+  display: flex !important;
+}
+
+.respAside > .liDiv {
+  left: 50%;
 }
 
 #welcome.lightmode {

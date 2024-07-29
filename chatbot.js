@@ -94,14 +94,15 @@ const chatSchema = new mongoose.Schema({
   title: String,
   description: String,
   favourite: Boolean,
-  messages: [{
-    sender: String, // 'user' or 'ai'
-    content: String,
-    timestamp: { type: Date, default: Date.now },
-  }],
+  messages: [
+    {
+      sender: String, // 'user' or 'ai'
+      content: String,
+      timestamp: { type: Date, default: Date.now },
+    },
+  ],
   userId: mongoose.Schema.Types.ObjectId,
 });
-
 
 const User = userDb.model("User", userSchema);
 const Chat = chatsDb.model("Chat", chatSchema);
@@ -152,8 +153,6 @@ app.use(async (req, res, next) => {
   next();
 });
 
-
-
 app.get("/create", (req, res) => {
   res.render("newchat");
 });
@@ -182,13 +181,13 @@ app.post("/chat", async (req, res) => {
 
     if (chat) {
       chat.messages.push({
-        sender: 'user',
+        sender: "user",
         content: input,
       });
 
       const aiResponse = await getAIResponse(input);
       chat.messages.push({
-        sender: 'ai',
+        sender: "ai",
         content: aiResponse,
       });
 
@@ -203,8 +202,6 @@ app.post("/chat", async (req, res) => {
     res.status(500).send("Error saving message.");
   }
 });
-
-
 
 app.post("/login", async (req, res) => {
   try {
@@ -240,16 +237,26 @@ app.post("/register", async (req, res) => {
 
 app.get("/profile", async (req, res) => {
   try {
+    const chats = await Chat.find({ userId: req.session.userId });
     const user = await User.findById(req.session.userId);
+    let messagesCount = 0;
+
     if (!user) {
       return res.redirect("/login");
     }
-    res.render("profile", { user });
+
+    for (let i = 0; i < chats.length; i++) {
+      messagesCount += chats[i].messages.length; // Access messages.length for each chat
+    }
+
+    console.log(chats);
+    res.render("profile", { user, chats, messagesCount });
   } catch (err) {
     console.error("Error fetching user data:", err);
     res.redirect("/login");
   }
 });
+
 
 app.post("/profile", upload, async (req, res) => {
   try {
@@ -283,7 +290,9 @@ app.post("/profile", upload, async (req, res) => {
 
 app.get("/", async (req, res) => {
   try {
-    const newChats = await Chat.find({ userId: req.session.userId }).sort({ id: -1 });
+    const newChats = await Chat.find({ userId: req.session.userId }).sort({
+      id: -1,
+    });
     const user = await User.findById(req.session.userId);
     res.render("chatbot", { newChats, user });
   } catch (err) {
@@ -292,15 +301,15 @@ app.get("/", async (req, res) => {
   }
 });
 
-
-
 app.post("/create", async (req, res) => {
   try {
     let chatName = req.body.chatname || "New Chat";
     let description = req.body.description || "No Description";
 
     const chats = await Chat.find({});
-    let largestChatID = chats.length ? Math.max(...chats.map(chat => chat.id)) : 0;
+    let largestChatID = chats.length
+      ? Math.max(...chats.map((chat) => chat.id))
+      : 0;
 
     // Create a new Chat document
     const newChat = new Chat({
@@ -315,16 +324,16 @@ app.post("/create", async (req, res) => {
     await newChat.save();
 
     // No need to store newChats in session, just redirect to the home page
-    res.redirect('/');
+    res.redirect("/");
   } catch (err) {
     console.error("Error creating chat:", err);
     res.status(500).send("Server error while creating chat.");
   }
 });
 
-app.get('/get-chat/:id', async (req, res) => {
+app.get("/get-chat/:id", async (req, res) => {
   const chatId = parseInt(req.params.id, 10);
-  
+
   if (isNaN(chatId)) {
     return res.status(400).send("Invalid chat ID");
   }
@@ -342,7 +351,6 @@ app.get('/get-chat/:id', async (req, res) => {
   }
 });
 
-
 app.post("/logout", (req, res) => {
   req.session.destroy((err) => {
     if (err) {
@@ -351,7 +359,6 @@ app.post("/logout", (req, res) => {
     res.redirect("/login");
   });
 });
-
 
 app.post("/", async (req, res) => {
   const chatId = parseInt(req.body.chatId, 10);
@@ -369,7 +376,7 @@ app.post("/", async (req, res) => {
       chat.title = editChatTitle || chat.title;
       chat.description = editChatDesc || chat.description;
       await chat.save();
-      res.redirect('/');
+      res.redirect("/");
     } else {
       res.status(404).send("Chat not found");
     }
@@ -379,8 +386,7 @@ app.post("/", async (req, res) => {
   }
 });
 
-
-app.delete('/delete-chat/:id', async (req, res) => {
+app.delete("/delete-chat/:id", async (req, res) => {
   const chatId = parseInt(req.params.id);
 
   try {
@@ -389,17 +395,20 @@ app.delete('/delete-chat/:id', async (req, res) => {
     if (result.deletedCount > 0) {
       res.json({ success: true });
     } else {
-      res.json({ success: false, message: 'Chat not found' });
+      res.json({ success: false, message: "Chat not found" });
     }
   } catch (error) {
-    console.error('Error deleting chat:', error);
+    console.error("Error deleting chat:", error);
   }
 });
 
 app.get("/favs", async (req, res) => {
   try {
     // Fetch favourite chats
-    const favouriteChats = await Chat.find({ userId: req.session.userId, favourite: true }).sort({ id: -1 });
+    const favouriteChats = await Chat.find({
+      userId: req.session.userId,
+      favourite: true,
+    }).sort({ id: -1 });
     const user = await User.findById(req.session.userId);
     res.render("favourites", { favouriteChats, user });
   } catch (err) {
@@ -410,7 +419,7 @@ app.get("/favs", async (req, res) => {
 
 app.post("/toggle-favourite", async (req, res) => {
   const chatId = parseInt(req.body.chatId, 10);
-  
+
   if (isNaN(chatId)) {
     return res.status(400).send("Invalid chat ID");
   }
@@ -431,8 +440,6 @@ app.post("/toggle-favourite", async (req, res) => {
     res.status(500).send("Server error while toggling favourite.");
   }
 });
-
-
 
 
 app.listen(port, async () => {

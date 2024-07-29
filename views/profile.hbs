@@ -33,18 +33,10 @@
               <i class="fa-solid fa-pen" id="editBtnEmail"></i>
             </div>
           </div>
-          <div>
-            <p style="margin-top:50px;">Password</p>
-            <div>
-              <h2>••••••••</h2>
-              <input type="password" name="newPassword" id="newPassword" />
-              <i class="fa-solid fa-pen" id="editBtnPassword"></i>
-            </div>
-          </div>
         <button type="submit">Save Changes</button>
         </div>
       </form>
-      <p class="chats_messages" style="color: #656565;margin-top: 80px">You have 0 chats and 0 messages</p>
+      <p class="chats_messages" style="color: #656565;margin-top: 80px">You have {{chats.length}} chats and {{messagesCount}} messages</p>
     </main>
     <script src="/public/lightmode.js"></script>
     <script src="/public/profile.js"></script>

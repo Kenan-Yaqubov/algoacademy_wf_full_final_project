@@ -73,6 +73,12 @@
     font-size: 32px;
 }
 
+@media (max-width: 460px) {
+  .newchat {
+    width: 90%;
+  }
+}
+
 /* Light mode */
 .blur.lightmode {
   backdrop-filter: blur(10px);

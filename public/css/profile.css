@@ -124,6 +124,34 @@ a {
   font-size: 30px;
 }
 
+@media (max-width: 460px) {
+  main {
+    width: 50% !important;
+  }
+
+  
+.name > div > div > h1,
+.name > div > div > h2 {
+  font-size: 16px;
+}
+
+.name > div > div > i {
+  position: static;
+}
+
+.img > img {
+  width: 100px;
+  height: 100px;
+}
+
+.img {
+  padding-right: 25px;
+}
+
+
+
+}
+
 /* Light mode */
 body.lightmode {
   background-color: #f5f5f5;

@@ -1,5 +1,7 @@
 // Define answerGiven globally or in a scope accessible to both functions
 let answerGiven = true;
+document.getElementById("userInput").disabled = true;
+
 // Initialize firstTimeCome in localStorage if not already set
 if (localStorage.getItem("firstTimeCome") === null) {
   localStorage.setItem("firstTimeCome", JSON.stringify(true));
@@ -15,6 +17,8 @@ if (firstTimeCome) {
 } else {
   console.log("Not First Time :)");
 }
+
+
 
 async function deleteChat(chatId) {
   try {
@@ -43,18 +47,23 @@ async function deleteChat(chatId) {
 
 function display(el) {
   const li = el.closest("li");
+  if (!li) return; 
+
   const div = li.nextElementSibling;
+  if (!div) return; 
 
   const isDivVisible = div.classList.contains("display");
-
-  document
-    .querySelectorAll(".liDiv")
-    .forEach((d) => d.classList.remove("display"));
+  document.querySelectorAll(".liDiv").forEach(d => d.classList.remove("display"));
 
   if (!isDivVisible) {
     div.classList.add("display");
   }
+
+  if (li.parentElement.classList.contains('respAside')) {
+    li.parentElement.style.display = 'block';
+  }
 }
+
 
 function display2(el, divClass, divClass2) {
   const div = el.nextElementSibling;
@@ -74,6 +83,8 @@ function display2(el, divClass, divClass2) {
 
 async function switchChat(chatId) {
   try {
+    document.getElementById("userInput").disabled = false;
+
     localStorage.setItem("chatId", chatId);
     const response = await fetch(`/get-chat/${chatId}`);
     if (!response.ok) {
@@ -87,7 +98,6 @@ async function switchChat(chatId) {
     alert("There was a problem loading the chat.");
   }
 }
-
 function displayChatMessages(chat) {
   const chatMessagesContainer = document.querySelector(".response_request");
   chatMessagesContainer.innerHTML = ""; // Clear current messages
@@ -105,16 +115,19 @@ function displayChatMessages(chat) {
         message.sender === "user" ? "request" : "response",
         "fade-in"
       );
+
+      let formattedContent = message.content.replace(/## (.*?)(\n|$)/g, "<h2>$1</h2>$2");
+      formattedContent = formattedContent.replace(/\*\s\*\*(.*?)\*\*/g, "<br><br><b>$1</b>");
+      formattedContent = formattedContent.replace(/\*\*(.*?)\*\*/g, "<b>$1</b><br>");
+      formattedContent = formattedContent.replace(/\*/g, "<br>");
+
       messageDiv.innerHTML = `
-        <b style="position:relative;top: 10px;">${
-          message.sender === "user" ? "User" : "Chatbot"
-        }:</b>
-        <p>${
-          message.content || "No content"
-        }</p> <!-- Handle undefined content -->
+        <b style="position:relative;top: 10px;">${message.sender === "user" ? "User" : "Chatbot"}:</b>
+        <p>${formattedContent || "No content"}</p> <!-- Handle undefined content -->
       `;
       chatMessagesContainer.appendChild(messageDiv);
     });
+    chatMessagesContainer.lastElementChild.scrollIntoView({ behavior: 'smooth', block: 'end' }); // Scroll to the last message
   }
 
   applyMode(); // Apply the current mode (light/dark)
@@ -153,6 +166,8 @@ async function submitInput() {
   chatMessagesContainer.appendChild(userMessage);
   applyMode();
 
+  userMessage.scrollIntoView({ behavior: 'smooth', block: 'end' }); // Scroll to user message
+
   let chatId = localStorage.getItem("chatId");
 
   try {
@@ -186,6 +201,7 @@ async function submitInput() {
       `;
 
     chatMessagesContainer.appendChild(chatbotMessage);
+    chatbotMessage.scrollIntoView({ behavior: 'smooth', block: 'end' }); // Scroll to chatbot message
   } catch (error) {
     console.error("There was a problem with the fetch operation:", error);
   } finally {
@@ -195,7 +211,6 @@ async function submitInput() {
     inputBtn.disabled = false;
   }
 }
-
 
 function toggleFavourite(chatId, element) {
   fetch(`/toggle-favourite`, {
@@ -234,16 +249,16 @@ function searchChats() {
       chat.style.display = "none";
     }
   });
-};
+}
 
 function displayRespAsideFn() {
-  let respAside = document.querySelector('.respAside')
-  respAside.classList.toggle('displayAside')
+  let respAside = document.querySelector(".respAside");
+  respAside.classList.toggle("displayAside");
 }
 
 function twofn(arg) {
   switchChat(arg);
-  displayRespAsideFn(); 
+  displayRespAsideFn();
 }
 
 function updateLightModeClasses(add) {

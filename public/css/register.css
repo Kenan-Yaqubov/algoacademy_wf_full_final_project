@@ -28,6 +28,7 @@ video {
 h1 {
   font-size: 200%;
   padding-top: 30px;
+  margin-bottom: 50px;
 }
 a {
   color: rgb(147, 147, 147);
@@ -62,4 +63,20 @@ a {
   font-size: 12px;
   margin-left: 100px;
   text-align: left;
+}
+
+@media (max-width: 460px) {
+  video {
+    display: none;
+  }
+
+  .div1 {
+    width: 100%;
+  }
+
+  .input {
+    width: 80%;
+    margin-left: 40px;
+    margin-top: 15px !important;
+  }
 }
